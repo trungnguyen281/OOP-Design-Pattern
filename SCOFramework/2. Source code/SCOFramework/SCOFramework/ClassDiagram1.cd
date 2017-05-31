@@ -1,0 +1,25 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="SCOFramework.SCOConnection">
+    <Position X="1.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAIAAAAAAEAAAAAAAAAAAAACAAAACAAAA=</HashCode>
+      <FileName>SCOConnection.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SCOFramework.SCOSlqCommand">
+    <Position X="4" Y="2.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAQAAAAAAAAAAAAAAAgAAAAAAAAAAAA=</HashCode>
+      <FileName>SCOSlqCommand.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SCOFramework.Mapper">
+    <Position X="6.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Mapper.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>
