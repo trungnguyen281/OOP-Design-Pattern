@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace SCOFramework
 {
-    public interface SCOCommand
+    public class OneToOneAttribute : Attribute
     {
-        List<T> Execute<T>() where T : new();
     }
 }
