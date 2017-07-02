@@ -1,5 +1,0 @@
-E:\HOCTAP\HK8 - Last semester\OOP Design Patern\OOP-Design-Pattern\SCOFramework\2. Source code\SCOFramework\SCOFramework\bin\Debug\SCOFramework.dll
-E:\HOCTAP\HK8 - Last semester\OOP Design Patern\OOP-Design-Pattern\SCOFramework\2. Source code\SCOFramework\SCOFramework\bin\Debug\SCOFramework.pdb
-E:\HOCTAP\HK8 - Last semester\OOP Design Patern\OOP-Design-Pattern\SCOFramework\2. Source code\SCOFramework\SCOFramework\obj\Debug\SCOFramework.dll
-E:\HOCTAP\HK8 - Last semester\OOP Design Patern\OOP-Design-Pattern\SCOFramework\2. Source code\SCOFramework\SCOFramework\obj\Debug\SCOFramework.pdb
-E:\HOCTAP\HK8 - Last semester\OOP Design Patern\OOP-Design-Pattern\SCOFramework\2. Source code\SCOFramework\SCOFramework\obj\Debug\SCOFramework.csprojResolveAssemblyReference.cache
