@@ -40,22 +40,24 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Attribute\DBColumnAttribute.cs" />
-    <Compile Include="Attribute\ManyToManyAttribute.cs" />
+    <Compile Include="Attribute\ColumnAttribute.cs" />
+    <Compile Include="Attribute\ManyToOneAttribute.cs" />
+    <Compile Include="Common\SCOQuery.cs" />
+    <Compile Include="Common\Enums.cs" />
+    <Compile Include="Attribute\ForeignKeyAttribute.cs" />
+    <Compile Include="SQL\SqlDeleteQuery.cs" />
     <Compile Include="Mapper.cs" />
     <Compile Include="Attribute\PrimaryKeyAttribute.cs" />
     <Compile Include="Attribute\OneToOneAttribute.cs" />
     <Compile Include="Attribute\OneToManyAttribute.cs" />
-    <Compile Include="Common\SCOCommand.cs" />
     <Compile Include="Common\SCOConnection.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SQL\SqlTextCommand.cs" />
-    <Compile Include="SQL\SqlCommand.cs" />
-    <Compile Include="Common\SelectCommand.cs" />
+    <Compile Include="SQL\SqlInsertQuery.cs" />
+    <Compile Include="SQL\SqlQuery.cs" />
     <Compile Include="SQL\SqlConnection.cs" />
-    <Compile Include="SQL\SqlSelectCommand.cs" />
-    <Compile Include="Common\UpdateCommand.cs" />
-    <Compile Include="SQL\SqlUpdateCommand.cs" />
+    <Compile Include="SQL\SqlSelectQuery.cs" />
+    <Compile Include="Attribute\TableAttribute.cs" />
+    <Compile Include="SQL\SqlUpdateQuery.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="ClassDiagram1.cd" />

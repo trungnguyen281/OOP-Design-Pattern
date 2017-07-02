@@ -1,4 +1,6 @@
-﻿using SqlClient = System.Data.SqlClient;
+﻿using System;
+using System.Collections.Generic;
+using SqlClient = System.Data.SqlClient;
 
 namespace SCOFramework
 {
@@ -8,33 +10,61 @@ namespace SCOFramework
 
         public SCOSqlConnection(string connectionString)
         {
+            _connectionString = connectionString;
             _cnn = new SqlClient.SqlConnection(connectionString);
         }
 
         public override void Open()
         {
-            _cnn.Open();
+            if (_cnn.State != System.Data.ConnectionState.Open)
+                _cnn.Open();
         }
 
         public override void Close()
         {
-            _cnn.Close();
+            if (_cnn.State != System.Data.ConnectionState.Closed)
+                _cnn.Close();
         }
 
-
-        public override ICanAddSelect CreateSelectCommand()
+        public override ICanAddWhere<T> Select<T>()
         {
-            return SelectSqlCommand.Create(_cnn);
+            return SelectSqlQuery<T>.Create(_cnn, _connectionString);
         }
 
-        public override ICanAddUpdate CreateUpdateCommand()
+        public override void Update<T>(T obj)
         {
-            return UpdateSqlCommand.Create(_cnn);
+            SqlUpdateQuery<T> query = new SqlUpdateQuery<T>(_cnn, _connectionString, obj);
+            query.Run();
         }
 
-        public override SCOCommand CreateTextCommand(string query)
+        public override void Delete<T>(T obj)
         {
-            return new SqlTextCommand(_cnn, query);
+            SqlDeleteQuery<T> query = new SqlDeleteQuery<T>(_cnn, _connectionString, obj);
+            query.Run();
+        }
+
+        public override void Insert<T>(T obj)
+        {
+            SqlInsertQuery<T> query = new SqlInsertQuery<T>(_cnn, _connectionString, obj);
+            query.Run();
+        }
+
+        public override List<T> ExecuteQuery<T>(string queryString)
+        {
+            SqlQuery query = new SqlQuery(_cnn, _connectionString, queryString);
+            return query.ExecuteQuery<T>();
+        }
+
+        public override List<T> ExecuteQueryWithOutRelationship<T>(string queryString)
+        {
+            SqlQuery query = new SqlQuery(_cnn, _connectionString, queryString);
+            return query.ExecuteQueryWithOutRelationship<T>();
+        }
+
+        public override void ExecuteNonQuery(string queryString)
+        {
+            SqlQuery query = new SqlQuery(_cnn, _connectionString, queryString);
+            query.ExecuteNonQuery();
         }
     }
 }

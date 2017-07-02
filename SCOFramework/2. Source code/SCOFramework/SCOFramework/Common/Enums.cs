@@ -6,7 +6,14 @@ using System.Threading.Tasks;
 
 namespace SCOFramework
 {
-    class ManyToManyAttribute
+    public enum DataType
     {
+        INT,
+        FLOAT,
+        CHAR,
+        NCHAR,
+        VARCHAR,
+        NVARCHAR,
+        BOOL
     }
 }

@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
 using SCOFramework;
 using System.Configuration;
+using System;
+using System.Reflection;
 
 namespace Application
 {
@@ -11,15 +13,16 @@ namespace Application
             var conn = new SCOSqlConnection(ConfigurationManager.ConnectionStrings["SqlConnectionString"].ToString());
             conn.Open();
             //-----------
-            var cmd = conn.CreateTextCommand("SELECT * FROM Student");
-            List<Student> students = cmd.ExecuteReader<Student>();
+            //List<Student> students = conn.Select<Student>().AllRow().Run();
 
-            var cmd2 = conn.CreateSelectCommand();
-            List<Student> students2 = cmd2.Select("*").From("Student").AllRows().Execute<Student>();
+            //conn.Delete(student);
+            Student s = new Student();
+            s.ID = "1312635";
+            s.Name = "Nguyễn Đức Trung";
 
-            var cmd3 = conn.CreateUpdateCommand();
-            cmd3.Update("Student").Set("Name = N'Trung Nguyen'").Set("Grade = 'CTT3'").Where("ID = '1312635'").Execute();
-
+            //conn.Insert(s);
+            List<PhoneNumber> phones = conn.Select<PhoneNumber>().AllRow().Run();
+            
             //-----------
             conn.Close();
         }

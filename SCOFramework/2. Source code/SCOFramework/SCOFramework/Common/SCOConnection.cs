@@ -1,17 +1,21 @@
-﻿namespace SCOFramework
+﻿using System.Collections.Generic;
+
+namespace SCOFramework
 {
     public abstract class SCOConnection
     {
-        public string ConnectionString { get; set; }
+        protected string _connectionString { get; set; }
 
         public abstract void Close();
 
         public abstract void Open();
 
-        public abstract SCOCommand CreateTextCommand(string query);
-
-        public abstract ICanAddSelect CreateSelectCommand();
-
-        public abstract ICanAddUpdate CreateUpdateCommand();
+        public abstract ICanAddWhere<T> Select<T>() where T : new();
+        public abstract void Update<T>(T obj) where T : new();
+        public abstract void Delete<T>(T obj) where T : new();
+        public abstract void Insert<T>(T obj) where T : new();
+        public abstract List<T> ExecuteQuery<T>(string v) where T : new();
+        public abstract List<T> ExecuteQueryWithOutRelationship<T>(string v) where T : new();
+        public abstract void ExecuteNonQuery(string v);
     }
 }

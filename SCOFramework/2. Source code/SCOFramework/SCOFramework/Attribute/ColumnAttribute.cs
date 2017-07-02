@@ -5,13 +5,15 @@ using System.Text;
 
 namespace SCOFramework
 {
-    public class DBColumnAttribute : Attribute
+    public class ColumnAttribute : Attribute
     {
         public string Name { get; private set; }
+        public DataType Type { get; private set; }
 
-        public DBColumnAttribute(string name)
+        public ColumnAttribute(string name, DataType type)
         {
             Name = name;
+            Type = type;
         }
     }
 }
