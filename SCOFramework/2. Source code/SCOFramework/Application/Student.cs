@@ -11,6 +11,7 @@ namespace Application
         [ForeignKey("2", "ID", "StudentID")]
         public string ID { get; set; }
 
+        [PrimaryKey("Name", false)]
         [Column("Name", DataType.NVARCHAR)]
         public string Name { get; set; }
 

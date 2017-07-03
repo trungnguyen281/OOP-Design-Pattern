@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using SqlClient = System.Data.SqlClient;
 
 namespace SCOFramework

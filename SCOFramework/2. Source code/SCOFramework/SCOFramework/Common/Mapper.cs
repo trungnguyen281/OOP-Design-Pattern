@@ -2,9 +2,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Data;
-using System.Linq;
-using System.Reflection;
-using System.Text;
 
 namespace SCOFramework
 {
@@ -18,8 +15,8 @@ namespace SCOFramework
             foreach (var property in properties)
             {
                 var attributes = property.GetCustomAttributes(false);
+                var columnMapping = FirstOrDefault(attributes, typeof(ColumnAttribute));
 
-                var columnMapping = attributes.FirstOrDefault(a => a.GetType() == typeof(ColumnAttribute));
                 if (columnMapping != null)
                 {
                     var mapsTo = columnMapping as ColumnAttribute;
@@ -42,7 +39,7 @@ namespace SCOFramework
             {
                 var attributes = property.GetCustomAttributes(false);
 
-                var columnMapping = attributes.FirstOrDefault(a => a.GetType() == typeof(ColumnAttribute));
+                var columnMapping = FirstOrDefault(attributes, typeof(ColumnAttribute));
                 if (columnMapping != null)
                 {
                     var mapsTo = columnMapping as ColumnAttribute;
@@ -58,8 +55,8 @@ namespace SCOFramework
 
         public string GetTableName<T>() where T : new()
         {
-            var tableAttribute = typeof(T).GetCustomAttributes(typeof(TableAttribute), true).FirstOrDefault() as TableAttribute;
-
+            var tableAttributes = typeof(T).GetCustomAttributes(typeof(TableAttribute), true);
+            var tableAttribute = FirstOrDefault(tableAttributes, typeof(TableAttribute)) as TableAttribute;
             if (tableAttribute != null)
                 return tableAttribute.Name;
             return string.Empty;
@@ -73,7 +70,7 @@ namespace SCOFramework
             foreach (var property in properties)
             {
                 var attributes = property.GetCustomAttributes(false);
-                var primaryKeyAttribute = attributes.FirstOrDefault(a => a.GetType() == typeof(PrimaryKeyAttribute));
+                var primaryKeyAttribute = FirstOrDefault(attributes, typeof(PrimaryKeyAttribute));
                 if (primaryKeyAttribute != null)
                     primaryKeys.Add(primaryKeyAttribute as PrimaryKeyAttribute);
             }
@@ -84,7 +81,7 @@ namespace SCOFramework
                 return null;
         }
 
-        public List<ForeignKeyAttribute> GetForeignKeys<T>() where T : new()
+        public List<ForeignKeyAttribute> GetForeignKeys<T>(string relationshipID) where T : new()
         {
             List<ForeignKeyAttribute> foreignKeys = new List<ForeignKeyAttribute>();
 
@@ -92,9 +89,9 @@ namespace SCOFramework
             foreach (var property in properties)
             {
                 var attributes = property.GetCustomAttributes(false);
-                var foreignKeyAttribute = attributes.FirstOrDefault(a => a.GetType() == typeof(ForeignKeyAttribute));
-                if (foreignKeyAttribute != null)
-                foreignKeys.Add(foreignKeyAttribute as ForeignKeyAttribute);
+                var foreignKeyAttribute = FirstOrDefault(attributes, typeof(ForeignKeyAttribute));
+                if (foreignKeyAttribute != null && (foreignKeyAttribute as ForeignKeyAttribute).RelationshipID == relationshipID)
+                    foreignKeys.Add(foreignKeyAttribute as ForeignKeyAttribute);
             }
 
             if (foreignKeys.Count > 0)
@@ -110,7 +107,7 @@ namespace SCOFramework
             foreach (var property in properties)
             {
                 var attributes = property.GetCustomAttributes(false);
-                var columnMapping = attributes.FirstOrDefault(a => a.GetType() == typeof(ColumnAttribute));
+                var columnMapping = FirstOrDefault(attributes, typeof(ColumnAttribute));
 
                 if (columnMapping != null)
                 {
@@ -132,7 +129,7 @@ namespace SCOFramework
             foreach (var property in properties)
             {
                 var attributes = property.GetCustomAttributes(false);
-                var columnMapping = attributes.FirstOrDefault(a => a.GetType() == typeof(ColumnAttribute));
+                var columnMapping = FirstOrDefault(attributes, typeof(ColumnAttribute));
 
                 if (columnMapping != null)
                 {
@@ -163,12 +160,39 @@ namespace SCOFramework
             return null;
         }
 
-        public T GetFirst<T>(IEnumerable source)
+        protected object FirstOrDefault(object[] attributes, Type type)
         {
-            List<T> list = source.Cast<T>().ToList();
-            if (list != null && list.Count != 0)
-                return list[0];
-            return default(T);
+            foreach (var a in attributes)
+            {
+                if (a.GetType() == type)
+                    return a;
+            }
+            return null;
+        }
+
+        protected object[] GetAll(object[] attributes, Type type)
+        {
+            object[] objArray = new object[0];
+            foreach (var a in attributes)
+            {
+                if (a.GetType() == type)
+                {
+                    Array.Resize(ref objArray, objArray.Length + 1);
+                    objArray[objArray.Length - 1] = a;
+                }
+            }
+            return objArray;
+        }
+
+        public object GetFirst(IEnumerable source)
+        { 
+            IEnumerator iter = source.GetEnumerator();
+
+            if (iter.MoveNext())
+            {
+                return iter.Current;
+            }
+            return null;
         }
     }
 }

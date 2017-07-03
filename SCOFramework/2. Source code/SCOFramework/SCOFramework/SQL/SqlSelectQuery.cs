@@ -1,7 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
+﻿using System.Collections.Generic;
 using System.Data.SqlClient;
+
 namespace SCOFramework
 {
     public class SelectSqlQuery<T> : SqlQuery,  ICanAddWhere<T>, ICanAddHavingOrRun<T>, ICanAddGroupBy<T>, ICanRun<T> where T : new()
@@ -34,15 +33,15 @@ namespace SCOFramework
             return this;
         }
 
-        public ICanRun<T> GroupBy(string columnNames)
-        {
-            _query = string.Format("{0} GROUP BY {1}", _query, columnNames);
-            return this;
-        }
-
         public ICanAddGroupBy<T> Having(string condition)
         {
             _query = string.Format("{0} HAVING {1}", _query, condition);
+            return this;
+        }
+
+        public ICanRun<T> GroupBy(string columnNames)
+        {
+            _query = string.Format("{0} GROUP BY {1}", _query, columnNames);
             return this;
         }
 

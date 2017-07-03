@@ -1,8 +1,6 @@
 ﻿using System.Collections.Generic;
 using SCOFramework;
 using System.Configuration;
-using System;
-using System.Reflection;
 
 namespace Application
 {

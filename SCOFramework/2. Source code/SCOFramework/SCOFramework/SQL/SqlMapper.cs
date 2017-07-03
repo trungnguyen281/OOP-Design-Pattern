@@ -2,10 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Data;
-using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SCOFramework
 {
@@ -19,8 +16,8 @@ namespace SCOFramework
             {
                 var attributes = property.GetCustomAttributes(false);
 
-                var oneToManyAttributes = attributes.Where(a => a.GetType() == typeof(OneToManyAttribute)).ToList();
-                if (oneToManyAttributes != null && oneToManyAttributes.Count != 0)
+                var oneToManyAttributes = GetAll(attributes, typeof(OneToManyAttribute));
+                if (oneToManyAttributes != null && oneToManyAttributes.Length != 0)
                 {
                     foreach (OneToManyAttribute oneToManyAttribute in oneToManyAttributes)
                     {
@@ -36,7 +33,7 @@ namespace SCOFramework
 
                             MethodInfo getForeignKeyAttributeMethod = mapper.GetType().GetMethod("GetForeignKeys")
                                 .MakeGenericMethod(new Type[] { itemType });
-                            List<ForeignKeyAttribute> foreignKeyAttributes = getForeignKeyAttributeMethod.Invoke(mapper, null) as List<ForeignKeyAttribute>;
+                            List<ForeignKeyAttribute> foreignKeyAttributes = getForeignKeyAttributeMethod.Invoke(mapper, new object[] { oneToManyAttribute.RelationshipID }) as List<ForeignKeyAttribute>;
 
                             MethodInfo getColumnAttributeMethod = mapper.GetType().GetMethod("GetColumns")
                                 .MakeGenericMethod(typeof(T));
@@ -44,7 +41,7 @@ namespace SCOFramework
 
                             string whereStr = string.Empty;
 
-                            foreach (ForeignKeyAttribute foreignKeyAttribute in foreignKeyAttributes.Where(k => k.RelationshipID == oneToManyAttribute.RelationshipID))
+                            foreach (ForeignKeyAttribute foreignKeyAttribute in foreignKeyAttributes)
                             {
                                 ColumnAttribute column = FindColumn(foreignKeyAttribute.References, columnAttributes);
                                 if (column != null)
@@ -84,35 +81,44 @@ namespace SCOFramework
                 Type type = property.PropertyType;
                 var attributes = property.GetCustomAttributes(false);
 
-                var toOneAttributes = attributes.Where(a => a.GetType() == typeof(OneToOneAttribute) || a.GetType() == typeof(ManyToOneAttribute)).ToList();
-                if (toOneAttributes != null && toOneAttributes.Count != 0)
+                var arr1 = GetAll(attributes, typeof(OneToOneAttribute));
+                var arr2 = GetAll(attributes, typeof(ManyToOneAttribute));
+
+                var toOneAttributes = new object[arr1.Length + arr2.Length];
+                if (toOneAttributes.Length > 0)
+                {
+                    arr1.CopyTo(toOneAttributes, 0);
+                    arr2.CopyTo(toOneAttributes, arr1.Length);
+                }
+                    
+                if (toOneAttributes != null && toOneAttributes.Length != 0)
                 {
                     foreach (var attribute in toOneAttributes)
                     {
                         SqlMapper mapper = new SqlMapper();
+                        string tableName = string.Empty;
+                        string whereStr = string.Empty;
+                        string relationshipID = string.Empty;
+
+                        if (attribute.GetType() == typeof(OneToOneAttribute))
+                        {
+                            relationshipID = (attribute as OneToOneAttribute).RelationshipID;
+                            tableName = (attribute as OneToOneAttribute).TableName;
+                        }
+                        else
+                        {
+                            relationshipID = (attribute as ManyToOneAttribute).RelationshipID;
+                            tableName = (attribute as ManyToOneAttribute).TableName;
+                        }
 
                         MethodInfo getForeignKeyAttributeMethod = mapper.GetType().GetMethod("GetForeignKeys")
                             .MakeGenericMethod(typeof(T));
-                        List<ForeignKeyAttribute> foreignKeyAttributes = getForeignKeyAttributeMethod.Invoke(mapper, null) as List<ForeignKeyAttribute>;
+                        List<ForeignKeyAttribute> foreignKeyAttributes = getForeignKeyAttributeMethod.Invoke(mapper, new object[] { relationshipID }) as List<ForeignKeyAttribute>;
 
                         MethodInfo getColumnAttributeMethod = mapper.GetType().GetMethod("GetColumns")
                             .MakeGenericMethod(new Type[] { type });
 
                         List<ColumnAttribute> columnAttributes = getColumnAttributeMethod.Invoke(mapper, null) as List<ColumnAttribute>;
-
-                        string tableName = string.Empty;
-                        string whereStr = string.Empty;
-
-                        if (attribute.GetType() == typeof(OneToOneAttribute))
-                        {
-                            foreignKeyAttributes = foreignKeyAttributes.Where(k => k.RelationshipID == (attribute as OneToOneAttribute).RelationshipID).ToList();
-                            tableName = (attribute as OneToOneAttribute).TableName;
-                        }
-                        else
-                        {
-                            foreignKeyAttributes = foreignKeyAttributes.Where(k => k.RelationshipID == (attribute as ManyToOneAttribute).RelationshipID).ToList();
-                            tableName = (attribute as ManyToOneAttribute).TableName;
-                        }
 
                         foreach (ForeignKeyAttribute foreignKeyAttribute in foreignKeyAttributes)
                         {
@@ -139,8 +145,7 @@ namespace SCOFramework
                             var ienumerable = (IEnumerable)method.Invoke(cnn, new object[] { query });
                             cnn.Close();
 
-                            MethodInfo method2 = mapper.GetType().GetMethod("GetFirst")
-                            .MakeGenericMethod(new Type[] { type });
+                            MethodInfo method2 = mapper.GetType().GetMethod("GetFirst");
                             var firstElement = method2.Invoke(mapper, new object[] { ienumerable });
 
                             property.SetValue(obj, firstElement);
