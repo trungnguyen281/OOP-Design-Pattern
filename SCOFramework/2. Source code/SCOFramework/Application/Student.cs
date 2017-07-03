@@ -8,6 +8,7 @@ namespace Application
     {
         [PrimaryKey("ID", false)]
         [Column("ID", DataType.VARCHAR)]
+        [ForeignKey("2", "ID", "StudentID")]
         public string ID { get; set; }
 
         [Column("Name", DataType.NVARCHAR)]
@@ -15,5 +16,8 @@ namespace Application
 
         [OneToMany("1", "Phone")]
         public List<PhoneNumber> Phone { get; set; }
+
+        [OneToOne("2", "IDCard")]
+        public IDCard abc { get; set; }
     }
 }

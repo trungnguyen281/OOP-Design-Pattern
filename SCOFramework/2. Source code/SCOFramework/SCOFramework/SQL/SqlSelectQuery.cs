@@ -4,17 +4,18 @@ using System.Data;
 using System.Data.SqlClient;
 namespace SCOFramework
 {
-    public class SelectSqlQuery<T> : SqlQuery,  ICanAddWhere<T>, ICanAddHavingOrRun<T>, ICanAddGroupBy<T>, ICanAddRun<T> where T : new()
+    public class SelectSqlQuery<T> : SqlQuery,  ICanAddWhere<T>, ICanAddHavingOrRun<T>, ICanAddGroupBy<T>, ICanRun<T> where T : new()
     {
         private SelectSqlQuery(SqlConnection cnn, string connectionString) : base(cnn, connectionString)
         {
+            SqlMapper mapper = new SqlMapper();
             _query += "SELECT";
-            foreach (ColumnAttribute column in Mapper.GetColumnAttribute<T>())
+            foreach (ColumnAttribute column in mapper.GetColumns<T>())
                 _query = string.Format("{0} {1},", _query, column.Name);
 
             _query = _query.Substring(0, _query.Length - 1);
 
-            _query = string.Format("{0} FROM {1}", _query, Mapper.GetTableName<T>());
+            _query = string.Format("{0} FROM {1}", _query, mapper.GetTableName<T>());
         }
 
         public static ICanAddWhere<T> Create(SqlConnection cnn, string connectionString)
@@ -33,7 +34,7 @@ namespace SCOFramework
             return this;
         }
 
-        public ICanAddHavingOrRun<T> GroupBy(string columnNames)
+        public ICanRun<T> GroupBy(string columnNames)
         {
             _query = string.Format("{0} GROUP BY {1}", _query, columnNames);
             return this;
@@ -49,27 +50,5 @@ namespace SCOFramework
         {
             return ExecuteQuery<T>();
         }
-    }
-
-    public interface ICanAddWhere<T> where T : new()
-    {
-        ICanAddHavingOrRun<T> Where(string condition);
-        ICanAddHavingOrRun<T> AllRow();
-    }
-
-    public interface ICanAddHavingOrRun<T> where T : new()
-    {
-        ICanAddGroupBy<T> Having(string condition);
-        List<T> Run();
-    }
-
-    public interface ICanAddGroupBy<T> where T : new()
-    {
-        ICanAddHavingOrRun<T> GroupBy(string columnName);
-    }
-
-    public interface ICanAddRun<T> where T : new()
-    {
-        List<T> Run();
     }
 }

@@ -8,9 +8,11 @@ namespace SCOFramework
     {
         public SqlInsertQuery(SqlConnection cnn, string connectionString, T obj) : base(cnn, connectionString)
         {
-            string tableName = Mapper.GetTableName<T>();
-            List<PrimaryKeyAttribute> primaryKeys = Mapper.GetPrimaryKey<T>();
-            Dictionary<ColumnAttribute, object> listColumnNameValues = Mapper.GetColumnValues<T>(obj);
+            SqlMapper mapper = new SqlMapper();
+
+            string tableName = mapper.GetTableName<T>();
+            List<PrimaryKeyAttribute> primaryKeys = mapper.GetPrimaryKeys<T>();
+            Dictionary<ColumnAttribute, object> listColumnNameValues = mapper.GetColumnValues<T>(obj);
 
             if (listColumnNameValues.Count != 0)
             {
@@ -47,11 +49,6 @@ namespace SCOFramework
 
                 _query = string.Format("INSERT INTO {0} ({1}) VALUES ({2})", tableName, columnStr, valueStr);
             }
-        }
-
-        public void Run()
-        {
-            ExecuteNonQuery();
         }
     }
 }

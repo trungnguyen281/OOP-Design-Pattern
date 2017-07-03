@@ -8,9 +8,11 @@ namespace SCOFramework
     {
         public SqlUpdateQuery(SqlConnection cnn, string connectionString, T obj) : base(cnn, connectionString)
         {
-            string tableName = Mapper.GetTableName<T>();
-            List<PrimaryKeyAttribute> primaryKeys = Mapper.GetPrimaryKey<T>();
-            Dictionary<ColumnAttribute, object> listColumnValues = Mapper.GetColumnValues<T>(obj);
+            SqlMapper mapper = new SqlMapper();
+
+            string tableName = mapper.GetTableName<T>();
+            List<PrimaryKeyAttribute> primaryKeys = mapper.GetPrimaryKeys<T>();
+            Dictionary<ColumnAttribute, object> listColumnValues = mapper.GetColumnValues<T>(obj);
 
             if (listColumnValues != null && primaryKeys != null)
             {
@@ -32,7 +34,7 @@ namespace SCOFramework
 
                 foreach (PrimaryKeyAttribute primaryKey in primaryKeys)
                 {
-                    ColumnAttribute column = Mapper.FindColumnAttribute(primaryKey.Name, listColumnValues);
+                    ColumnAttribute column = mapper.FindColumn(primaryKey.Name, listColumnValues);
                     if (column != null)
                     {
                         string format = "{0} = {1}, ";
@@ -49,11 +51,6 @@ namespace SCOFramework
 
                 _query = string.Format("UPDATE {0} SET {1} WHERE {2}", tableName, setStr, whereStr);
             }
-        }
-
-        public void Run()
-        {
-            ExecuteNonQuery();
         }
     }
 }

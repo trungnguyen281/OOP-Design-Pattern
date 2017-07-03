@@ -42,11 +42,12 @@
   <ItemGroup>
     <Compile Include="Attribute\ColumnAttribute.cs" />
     <Compile Include="Attribute\ManyToOneAttribute.cs" />
-    <Compile Include="Common\SCOQuery.cs" />
+    <Compile Include="Common\IQuery.cs" />
     <Compile Include="Common\Enums.cs" />
     <Compile Include="Attribute\ForeignKeyAttribute.cs" />
+    <Compile Include="SQL\SqlMapper.cs" />
     <Compile Include="SQL\SqlDeleteQuery.cs" />
-    <Compile Include="Mapper.cs" />
+    <Compile Include="Common\Mapper.cs" />
     <Compile Include="Attribute\PrimaryKeyAttribute.cs" />
     <Compile Include="Attribute\OneToOneAttribute.cs" />
     <Compile Include="Attribute\OneToManyAttribute.cs" />

@@ -13,8 +13,10 @@ namespace Application
             var conn = new SCOSqlConnection(ConfigurationManager.ConnectionStrings["SqlConnectionString"].ToString());
             conn.Open();
             //-----------
-            //List<Student> students = conn.Select<Student>().AllRow().Run();
-
+            List<Student> students = conn.Select<Student>().AllRow().Run();
+            PhoneNumber p = students[3].Phone[0];
+            p = conn.Select<PhoneNumber>().Where("ID = " + p.ID).Run()[0];
+           
             //conn.Delete(student);
             Student s = new Student();
             s.ID = "1312635";

@@ -11,14 +11,15 @@ namespace SCOFramework
     {
         public SqlDeleteQuery(SqlConnection cnn, string connectionString, T obj) : base(cnn, connectionString)
         {
-            string tableName = Mapper.GetTableName<T>();
-            List<PrimaryKeyAttribute> primaryKeys = Mapper.GetPrimaryKey<T>();
-            Dictionary<ColumnAttribute, object> listColumnValues = Mapper.GetColumnValues<T>(obj);
+            SqlMapper mapper = new SqlMapper();
+            string tableName = mapper.GetTableName<T>();
+            List<PrimaryKeyAttribute> primaryKeys = mapper.GetPrimaryKeys<T>();
+            Dictionary<ColumnAttribute, object> listColumnValues = mapper.GetColumnValues<T>(obj);
 
             string whereStr = string.Empty;
             foreach (PrimaryKeyAttribute primaryKey in primaryKeys)
             {
-                ColumnAttribute column = Mapper.FindColumnAttribute(primaryKey.Name, listColumnValues);
+                ColumnAttribute column = mapper.FindColumn(primaryKey.Name, listColumnValues);
                 if (column != null)
                 {
                     string format = "{0} = {1}, ";
@@ -34,11 +35,6 @@ namespace SCOFramework
                 whereStr = whereStr.Substring(0, whereStr.Length - 2);
 
             _query = string.Format("DELETE {0} WHERE {1}", tableName, whereStr);
-        }
-
-        public void Run()
-        {
-            ExecuteNonQuery();
         }
     }
 }

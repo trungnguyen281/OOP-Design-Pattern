@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace SCOFramework
 {
-    public class SqlQuery
+    public class SqlQuery : IQuery
     {
         protected string _connectionString;
         protected SqlCommand _cmd;
@@ -41,9 +41,10 @@ namespace SCOFramework
 
             List<T> res = new List<T>();
             SCOSqlConnection cnn = new SCOSqlConnection(_connectionString);
+            SqlMapper mapper = new SqlMapper();
 
             foreach (DataRow dr in dt.Rows)
-                res.Add(Mapper.MapWithRelationship<T>(cnn, dr));
+                res.Add(mapper.MapWithRelationship<T>(cnn, dr));
 
             return res;
         }
@@ -58,9 +59,10 @@ namespace SCOFramework
 
             List<T> res = new List<T>();
             SCOSqlConnection cnn = new SCOSqlConnection(_connectionString);
+            SqlMapper mapper = new SqlMapper();
 
             foreach (DataRow dr in dt.Rows)
-                res.Add(Mapper.MapWithOutRelationship<T>(cnn, dr));
+                res.Add(mapper.MapWithOutRelationship<T>(cnn, dr));
 
             return res;
         }
