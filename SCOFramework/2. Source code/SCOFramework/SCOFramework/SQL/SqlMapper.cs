@@ -40,19 +40,21 @@ namespace SCOFramework
                             List<ColumnAttribute> columnAttributes = getColumnAttributeMethod.Invoke(mapper, null) as List<ColumnAttribute>;
 
                             string whereStr = string.Empty;
-
-                            foreach (ForeignKeyAttribute foreignKeyAttribute in foreignKeyAttributes)
+                            if (foreignKeyAttributes != null)
                             {
-                                ColumnAttribute column = FindColumn(foreignKeyAttribute.References, columnAttributes);
-                                if (column != null)
+                                foreach (ForeignKeyAttribute foreignKeyAttribute in foreignKeyAttributes)
                                 {
-                                    string format = "{0} = {1}, ";
-                                    if (column.Type == DataType.NCHAR || column.Type == DataType.NVARCHAR)
-                                        format = "{0} = N'{1}', ";
-                                    else if (column.Type == DataType.CHAR || column.Type == DataType.VARCHAR)
-                                        format = "{0} = '{1}', ";
+                                    ColumnAttribute column = FindColumn(foreignKeyAttribute.References, columnAttributes);
+                                    if (column != null)
+                                    {
+                                        string format = "{0} = {1}, ";
+                                        if (column.Type == DataType.NCHAR || column.Type == DataType.NVARCHAR)
+                                            format = "{0} = N'{1}', ";
+                                        else if (column.Type == DataType.CHAR || column.Type == DataType.VARCHAR)
+                                            format = "{0} = '{1}', ";
 
-                                    whereStr += string.Format(format, foreignKeyAttribute.Name, dr[foreignKeyAttribute.References]);
+                                        whereStr += string.Format(format, foreignKeyAttribute.Name, dr[foreignKeyAttribute.References]);
+                                    }
                                 }
                             }
                             if (!string.IsNullOrEmpty(whereStr))
@@ -120,18 +122,21 @@ namespace SCOFramework
 
                         List<ColumnAttribute> columnAttributes = getColumnAttributeMethod.Invoke(mapper, null) as List<ColumnAttribute>;
 
-                        foreach (ForeignKeyAttribute foreignKeyAttribute in foreignKeyAttributes)
+                        if (foreignKeyAttributes != null)
                         {
-                            ColumnAttribute column = FindColumn(foreignKeyAttribute.References, columnAttributes);
-                            if (column != null)
+                            foreach (ForeignKeyAttribute foreignKeyAttribute in foreignKeyAttributes)
                             {
-                                string format = "{0} = {1}, ";
-                                if (column.Type == DataType.NCHAR || column.Type == DataType.NVARCHAR)
-                                    format = "{0} = N'{1}', ";
-                                else if (column.Type == DataType.CHAR || column.Type == DataType.VARCHAR)
-                                    format = "{0} = '{1}', ";
+                                ColumnAttribute column = FindColumn(foreignKeyAttribute.References, columnAttributes);
+                                if (column != null)
+                                {
+                                    string format = "{0} = {1}, ";
+                                    if (column.Type == DataType.NCHAR || column.Type == DataType.NVARCHAR)
+                                        format = "{0} = N'{1}', ";
+                                    else if (column.Type == DataType.CHAR || column.Type == DataType.VARCHAR)
+                                        format = "{0} = '{1}', ";
 
-                                whereStr += string.Format(format, foreignKeyAttribute.References, dr[foreignKeyAttribute.Name]);
+                                    whereStr += string.Format(format, foreignKeyAttribute.References, dr[foreignKeyAttribute.Name]);
+                                }
                             }
                         }
                         if (!string.IsNullOrEmpty(whereStr))
