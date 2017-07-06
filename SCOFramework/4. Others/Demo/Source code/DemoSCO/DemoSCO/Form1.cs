@@ -15,13 +15,13 @@ namespace DemoSCO
         public DemoSCO()
         {
             InitializeComponent();
+            connection = new SCOSqlConnection(ConfigurationManager.ConnectionStrings["ConnectionString"].ToString());
         }
 
         private void DemoSCO_Load(object sender, EventArgs e)
         {
             try
             {
-                connection = new SCOSqlConnection(ConfigurationManager.ConnectionStrings["ConnectionString"].ToString());
                 connection.Open();
                 students = connection.ExecuteQuery<Student>("SELECT * FROM STUDENT");
                 teachers = connection.Select<Teacher>().AllRow().Run();
@@ -130,6 +130,8 @@ namespace DemoSCO
             cbGVCN.DisplayMember = "Text";
             cbGVCN.ValueMember = "Value";
 
+            cbGVCN.Items.Clear();
+
             cbGVCN.Items.Add(new ComboboxItem("-- Chọn --", ""));
             foreach (Teacher teacher in teachers)
             {
@@ -143,7 +145,14 @@ namespace DemoSCO
             gridHocSinh.Rows.Clear();
             foreach (Student student in students)
             {
-                gridHocSinh.Rows.Add(student.ID, student.Name, student.Transcipt.GPA, student.Student_Subjects.Count, student.Teacher.Name);
+                int subjectCount = 0;
+                if (student.Student_Subjects != null)
+                    subjectCount = student.Student_Subjects.Count;
+                double gpa = 0;
+                if (student.Transcipt != null)
+                    gpa = student.Transcipt.GPA;
+
+                gridHocSinh.Rows.Add(student.ID, student.Name, subjectCount, gpa, student.Teacher.Name);
             }
         }
 

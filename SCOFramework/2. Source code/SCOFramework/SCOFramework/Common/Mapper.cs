@@ -7,7 +7,7 @@ namespace SCOFramework
 {
     public abstract class Mapper
     {
-        public T MapWithRelationship<T>(SCOSqlConnection cnn, DataRow dr) where T : new()
+        public T MapWithRelationship<T>(SCOConnection cnn, DataRow dr) where T : new()
         {
             T obj = new T();
             var properties = typeof(T).GetProperties();

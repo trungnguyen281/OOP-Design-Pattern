@@ -46,9 +46,10 @@ namespace SCOFramework
                     }
                 }
                 if (!string.IsNullOrEmpty(whereStr))
+                {
                     whereStr = whereStr.Substring(0, whereStr.Length - 2);
-
-                _query = string.Format("UPDATE {0} SET {1} WHERE {2}", tableName, setStr, whereStr);
+                    _query = string.Format("UPDATE {0} SET {1} WHERE {2}", tableName, setStr, whereStr);
+                }
             }
         }
     }

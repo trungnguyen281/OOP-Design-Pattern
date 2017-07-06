@@ -28,9 +28,10 @@ namespace SCOFramework
                 }
             }
             if (!string.IsNullOrEmpty(whereStr))
+            {
                 whereStr = whereStr.Substring(0, whereStr.Length - 2);
-
-            _query = string.Format("DELETE {0} WHERE {1}", tableName, whereStr);
+                _query = string.Format("DELETE {0} WHERE {1}", tableName, whereStr);
+            } 
         }
     }
 }

@@ -41,12 +41,12 @@ namespace SCOFramework
                         valueStr += string.Format(format, listColumnNameValues[column]);
                     }
                 }
-                if (!string.IsNullOrEmpty(columnStr))
+                if (!string.IsNullOrEmpty(columnStr) && !string.IsNullOrEmpty(valueStr))
+                {
                     columnStr = columnStr.Substring(0, columnStr.Length - 2);
-                if (!string.IsNullOrEmpty(valueStr))
                     valueStr = valueStr.Substring(0, valueStr.Length - 2);
-
-                _query = string.Format("INSERT INTO {0} ({1}) VALUES ({2})", tableName, columnStr, valueStr);
+                    _query = string.Format("INSERT INTO {0} ({1}) VALUES ({2})", tableName, columnStr, valueStr);
+                }
             }
         }
     }

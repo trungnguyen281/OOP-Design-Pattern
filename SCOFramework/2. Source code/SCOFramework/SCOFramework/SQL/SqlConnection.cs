@@ -30,22 +30,22 @@ namespace SCOFramework
             return SelectSqlQuery<T>.Create(_cnn, _connectionString);
         }
 
-        public override void Insert<T>(T obj)
+        public override int Insert<T>(T obj)
         {
             SqlInsertQuery<T> query = new SqlInsertQuery<T>(_cnn, _connectionString, obj);
-            query.ExecuteNonQuery();
+            return query.ExecuteNonQuery();
         }
 
-        public override void Update<T>(T obj)
+        public override int Update<T>(T obj)
         {
             SqlUpdateQuery<T> query = new SqlUpdateQuery<T>(_cnn, _connectionString, obj);
-            query.ExecuteNonQuery();
+            return query.ExecuteNonQuery();
         }
 
-        public override void Delete<T>(T obj)
+        public override int Delete<T>(T obj)
         {
             SqlDeleteQuery<T> query = new SqlDeleteQuery<T>(_cnn, _connectionString, obj);
-            query.ExecuteNonQuery();
+            return query.ExecuteNonQuery();
         }
 
         public override List<T> ExecuteQuery<T>(string queryString)
